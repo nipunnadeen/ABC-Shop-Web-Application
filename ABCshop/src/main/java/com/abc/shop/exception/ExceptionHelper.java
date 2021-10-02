@@ -9,7 +9,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.logging.Logger;
 
 public class ExceptionHelper {
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(ExceptionHelper.class);
+//    private static final Logger logger = (Logger) LoggerFactory.getLogger(ExceptionHelper.class);
 
 //    @ExceptionHandler(value = { InvalidInputException.class })
 //    public ResponseEntity<Object> handleInvalidInputException(InvalidInputException ex) {

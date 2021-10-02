@@ -5,15 +5,37 @@ import com.abc.shop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User user = userRepository.findUserByName(userName);
+
+//        boolean t = passwordEncoder.matches("",user.getPassword());
+
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        //authorities is empty check it
+        return new org.springframework.security.core.userdetails.
+                User(user.getEmail(), user.getPassword(), authorities);
+    }
 
     @Override
     public ResponseEntity<List<User>> getAllUser() {
@@ -36,8 +58,8 @@ public class UserServiceImpl implements UserService {
             if ((!user.getName().isEmpty() && user.getAge() > 0 && !user.getEmail().isEmpty()
                     && !user.getPassword().isEmpty()) && (user.getName() != null &&
                     user.getEmail() != null && user.getPassword() != null)) {
-                if (userRepository.findByUserName(user.getEmail()) == null) {
-//                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                if (userRepository.findUserByName(user.getEmail()) == null) {
+                        user.setPassword(passwordEncoder.encode(user.getPassword()));
                     userData = userRepository.save(user);
                     response = new ResponseEntity<>(userData, HttpStatus.OK);
                 } else {
@@ -57,7 +79,7 @@ public class UserServiceImpl implements UserService {
         ResponseEntity<User> response;
         try {
             if (userId != null && userId > 0) {
-                User userData = userRepository.findByUserId(userId);
+                User userData = userRepository.findUserById(userId);
                 if (userData != null) {
                     response = new ResponseEntity<>(userData, HttpStatus.OK);
                 } else {
@@ -80,16 +102,22 @@ public class UserServiceImpl implements UserService {
             if((!user.getName().isEmpty() && user.getAge() > 0 && !user.getEmail().isEmpty()
                     && !user.getPassword().isEmpty()) && (user.getName() != null &&
                     user.getEmail() != null && user.getEmail() != null)) {
-                userData = userRepository.findByUserId(userId);
+                userData = userRepository.findUserById(userId);
                 if (userData != null) {
-                    if(userRepository.findByUserName(user.getEmail()) != null) {
-                        userRepository.findById(userId);
-                        userData = new User(user.getName(), user.getAge(),
-                                user.getEmail(), user.getPassword());
+                    User users = userRepository.findUserByName(user.getEmail());
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    userData = new User(user.getName(), user.getAge(),
+                            user.getEmail(), user.getPassword());
+                    if(users == null ) {
                         User userDetail = userRepository.save(userData);
                         response = new ResponseEntity<>(userDetail, HttpStatus.OK);
                     } else {
-                        response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                        if(users.getId() == userId ) {
+                            User userDetail = userRepository.save(userData);
+                            response = new ResponseEntity<>(userDetail, HttpStatus.OK);
+                        } else {
+                            response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                        }
                     }
                 } else {
                     response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -109,7 +137,7 @@ public class UserServiceImpl implements UserService {
         User userData;
         try{
             if(userId != null && userId > 0) {
-                userData = userRepository.findByUserId(userId);
+                userData = userRepository.findUserById(userId);
                 if (userData != null) {
                     userRepository.deleteById(userId);
                     response = new ResponseEntity<>(userRepository, HttpStatus.OK);

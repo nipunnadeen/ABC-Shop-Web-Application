@@ -44,7 +44,7 @@ import java.util.Date;
         @CreatedBy
         private String createdBy;
 
-        @Column(name = "is_Deleted", nullable = false)
+        @Column(name = "is_deleted", nullable = false)
         @SQLDelete(sql = "UPDATE users SET is_Deleted=true WHERE id=?")
         @Where(clause = "deleted = false")
         private boolean isDeleted;

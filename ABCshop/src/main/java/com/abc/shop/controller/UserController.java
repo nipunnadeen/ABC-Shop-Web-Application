@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
@@ -14,29 +16,29 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUser();
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@RequestBody User user){
         user.setRoleId(CommonUtill.customer);
         return userService.createUser(user);
     }
 
     @PostMapping("/admin/register")
-    public ResponseEntity createAdmin(@RequestBody User user){
+    public ResponseEntity<User> createAdmin(@RequestBody User user){
         user.setRoleId(CommonUtill.admin);
         return userService.createUser(user);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity getUserDetail(@RequestParam Long userId){
+    public ResponseEntity<User> getUserDetail(@RequestParam Long userId){
         return userService.getUser(userId);
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity updateUser(@RequestBody User userDetails, @RequestParam Long userId){
+    public ResponseEntity<User> updateUser(@RequestBody User userDetails, @RequestParam Long userId){
         return userService.updateUser(userDetails, userId);
     }
 
