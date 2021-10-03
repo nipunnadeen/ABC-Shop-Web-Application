@@ -1,6 +1,8 @@
 package com.abc.shop.model;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
-
 
     @Entity
     @Table(name = "users")
@@ -38,6 +39,7 @@ import java.util.Date;
 
         @Column(name = "created_at", nullable = false)
         @CreatedDate
+        @CreationTimestamp
         private Date createdAt;
 
         @Column(name = "created_by", nullable = false)
@@ -46,16 +48,20 @@ import java.util.Date;
 
         @Column(name = "is_deleted", nullable = false)
         @SQLDelete(sql = "UPDATE users SET is_Deleted=true WHERE id=?")
-        @Where(clause = "deleted = false")
+        @Where(clause = "is_deleted = false")
         private boolean isDeleted;
 
         @Column(name = "updated_at", nullable = false)
         @LastModifiedDate
+        @UpdateTimestamp
         private Date updatedAt;
 
         @Column(name = "updated_by", nullable = false)
         @LastModifiedBy
         private String updatedBy;
+
+        public User() {
+        }
 
         public User(String name, int age, String email, String password) {
             super();

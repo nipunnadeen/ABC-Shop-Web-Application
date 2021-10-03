@@ -60,6 +60,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     user.getEmail() != null && user.getPassword() != null)) {
                 if (userRepository.findUserByName(user.getEmail()) == null) {
                         user.setPassword(passwordEncoder.encode(user.getPassword()));
+                        user.setCreatedBy(user.getName());
+                        user.setUpdatedBy(user.getName());
                     userData = userRepository.save(user);
                     response = new ResponseEntity<>(userData, HttpStatus.OK);
                 } else {
