@@ -19,23 +19,23 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @PostMapping("/Product/create")
+    @PostMapping("/product/create")
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
         return productService.createProduct(product);
     }
 
-    @GetMapping("/Product/{id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<Product> getProductDetail(@RequestParam Long productId){
         return productService.getProduct(productId);
     }
 
-    @PutMapping("/Product/{id}")
+    @PutMapping("/product/{id}")
     public ResponseEntity<Product> updateProduct(@RequestBody Product productDetails,
                                               @RequestParam Long productId){
         return productService.updateProduct(productDetails, productId);
     }
 
-    @DeleteMapping("/Product/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity removeProduct(@RequestParam Long productId){
         return productService.deleteProduct(productId);
     }
