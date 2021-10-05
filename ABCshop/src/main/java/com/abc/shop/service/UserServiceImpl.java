@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -60,8 +61,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     user.getEmail() != null && user.getPassword() != null)) {
                 if (userRepository.findUserByName(user.getEmail()) == null) {
                         user.setPassword(passwordEncoder.encode(user.getPassword()));
-                        user.setCreatedBy(user.getName());
-                        user.setUpdatedBy(user.getName());
+//                        user.setCreatedBy(user.getName());
+//                        user.setUpdatedBy(user.getName());
                     userData = userRepository.save(user);
                     response = new ResponseEntity<>(userData, HttpStatus.OK);
                 } else {
@@ -107,9 +108,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 userData = userRepository.findUserById(userId);
                 if (userData != null) {
                     User users = userRepository.findUserByName(user.getEmail());
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
-                    userData = new User(user.getName(), user.getAge(),
-                            user.getEmail(), user.getPassword());
+
+                    userData.setName(user.getName());
+                    userData.setAge(user.getAge());
+                    userData.setEmail(user.getEmail());
+                    userData.setPassword(passwordEncoder.encode(user.getPassword()));
+//                    userData.setUpdatedAt(new Date());
+//                    userData.setUpdatedBy(8);
+
+
                     if(users == null ) {
                         User userDetail = userRepository.save(userData);
                         response = new ResponseEntity<>(userDetail, HttpStatus.OK);

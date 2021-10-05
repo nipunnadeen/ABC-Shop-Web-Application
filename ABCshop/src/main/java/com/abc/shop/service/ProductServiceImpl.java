@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,6 +22,12 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productsData;
         try {
             productsData = productRepository.findAll();
+//            for(int i=0; i<productsData.size(); i++){
+//                Product specificProduct  = productsData.get(i);
+//                if(specificProduct.getDeletedAt() == null){
+//                    productsData.remove(specificProduct);
+//                }
+//            }
             response = new ResponseEntity<>(productsData, HttpStatus.OK);
         } catch (Exception e){
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,15 +45,19 @@ public class ProductServiceImpl implements ProductService {
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
                     product.getProductDescription() != null)) {
 //                if (productRepository.findUserByName(product.getEmail()) == null) {
-                    product.setProductName(product.getProductName());
-                    product.setProductDescription(product.getProductDescription());
-                    product.setProductPrice(product.getProductPrice());
-                    product.setCreatedBy(8);
-                    product.setUpdatedBy(8);
+                    productsData = new Product(product.getProductName(), product.getProductDescription(),
+                            product.getProductQuantity(), product.getProductPrice(), 8,
+                            8, 8, 1);
+//                    product.setProductName(product.getProductName());
+//                    product.setProductDescription(product.getProductDescription());
+//                    product.setProductPrice(product.getProductPrice());
+//                    product.setCreatedBy(8);
+//                    product.setUpdatedBy(8);
 //                    product.setDeletedBy(8);
-//                    product.setPromotionId();
-                    productsData = productRepository.save(product);
-                    response = new ResponseEntity<>(productsData, HttpStatus.OK);
+//                    product.setPromotionId(product.getPromotionId());
+//                    productsData = productRepository.save(productsData);
+                    response = new ResponseEntity<>(productRepository.save(productsData),
+                            HttpStatus.OK);
 //                } else {
 //                    response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
 //                }
@@ -61,12 +72,65 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<Product> getProduct(Long productId) {
-        return null;
+
+        ResponseEntity<Product> response;
+        try {
+            if (productId != null && productId > 0) {
+                Product productData = productRepository.findProductByid(productId);
+                if (productData != null) {
+                    response = new ResponseEntity<>(productData, HttpStatus.OK);
+                } else {
+                    response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } else {
+                response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        } catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
     }
 
     @Override
     public ResponseEntity<Product> updateProduct(Product product, Long productId) {
-        return null;
+        ResponseEntity<Product> response;
+        Product productsData;
+
+        try {
+            if((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
+                    !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
+                    product.getProductDescription() != null)) {
+                productsData = productRepository.findProductByid(productId);
+                if (productsData != null) {
+
+                    productsData.setProductName(product.getProductName());
+                    productsData.setProductDescription(product.getProductDescription());
+                    productsData.setProductQuantity(product.getProductQuantity());
+                    productsData.setProductPrice(product.getProductPrice());
+                    productsData.setUpdatedAt(new Date());
+                    productsData.setUpdatedBy(8);
+                    productsData.setPromotionId(product.getPromotionId());
+//                    if(products == null ) {
+                        Product userDetail = productRepository.save(productsData);
+                        response = new ResponseEntity<>(userDetail, HttpStatus.OK);
+//                    } else {
+//                        if(products.getId() == productId ) {
+//                            Product productDetail = productRepository.save(productsData);
+//                            response = new ResponseEntity<>(productDetail, HttpStatus.OK);
+//                        } else {
+//                            response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+//                        }
+//                    }
+                } else {
+                    response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } else {
+                response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        } catch (Exception e){
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
     }
 
     @Override
@@ -78,8 +142,9 @@ public class ProductServiceImpl implements ProductService {
             if(productId != null && productId > 0) {
                 productsData = productRepository.findProductByid(productId);
                 if (productsData != null) {
-                    productRepository.deleteById(productId);
-                    response = new ResponseEntity<>(productRepository, HttpStatus.OK);
+                    productsData.setDeletedAt(new Date());
+//                    productRepository.deleteById(productId);
+                    response = new ResponseEntity<>(HttpStatus.OK);
                 } else {
                     response = new ResponseEntity<>(("Product not exist with id :" + productId),
                             HttpStatus.NOT_FOUND);

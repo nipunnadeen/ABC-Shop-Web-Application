@@ -31,6 +31,9 @@ public class Product implements Serializable {
     @Column(name = "product_description", nullable = false)
     private String productDescription;
 
+    @Column(name = "product_quantity", nullable = false)
+    private int productQuantity;
+
     @Column(name = "product_price", nullable = false)
     private double productPrice;
 
@@ -43,28 +46,42 @@ public class Product implements Serializable {
     @CreatedBy
     private int createdBy;
 
-    @Column(name = "updated_at", insertable = false)
-    @LastModifiedDate
-    @UpdateTimestamp
+    @Column(name = "updated_at")
+//    @LastModifiedDate
+//    @UpdateTimestamp
     private Date updatedAt;
 
-    @Column(name = "updated_by",insertable = false, updatable = false)
-    @LastModifiedBy
+    @Column(name = "updated_by")
     private int updatedBy;
 
-    @Column(name = "deleted_at", insertable = false)
-    @LastModifiedDate
+    @Column(name = "deleted_at")
     @UpdateTimestamp
     private Date deletedAt;
 
-    @Column(name = "deleted_by", insertable = false)
+    @Column(name = "deleted_by")
 //    @LastModifiedBy
     private int deletedBy;
 
-    @Column(name = "promotion_id", insertable = false)
+    @Column(name = "promotion_id")
     private int promotionId;
 
+//    @Column(name = "promotion_id", insertable = false)
+//    private int promotionId;
+
     public Product() {
+    }
+
+    public Product(String productName, String productDescription, int productQuantity,
+                   double productPrice, int createdBy, int updatedBy, int deletedBy,
+                   int promotionId) {
+        this.productName = productName;
+        this.productDescription = productDescription;
+        this.productQuantity = productQuantity;
+        this.productPrice = productPrice;
+        this.createdBy = createdBy;
+        this.updatedBy = updatedBy;
+        this.deletedBy = deletedBy;
+        this.promotionId = promotionId;
     }
 
     public long getId() {
@@ -89,6 +106,14 @@ public class Product implements Serializable {
 
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
     }
 
     public double getProductPrice() {

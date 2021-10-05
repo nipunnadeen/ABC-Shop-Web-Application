@@ -37,28 +37,25 @@ public class User {
     @Column(name = "role_id", nullable = false)
     private int roleId;
 
-    @Column(name = "created_at", nullable = false)
-    @CreatedDate
-    @CreationTimestamp
-    private Date createdAt;
-
-    @Column(name = "created_by", nullable = false)
-    @CreatedBy
-    private String createdBy;
-
-    @Column(name = "is_deleted", nullable = false)
-    @SQLDelete(sql = "UPDATE users SET is_Deleted=true WHERE id=?")
-    @Where(clause = "is_deleted = false")
-    private boolean isDeleted;
-
-    @Column(name = "updated_at", nullable = false)
-    @LastModifiedDate
-    @UpdateTimestamp
-    private Date updatedAt;
-
-    @Column(name = "updated_by", nullable = false)
-    @LastModifiedBy
-    private String updatedBy;
+//    @Column(name = "created_at", nullable = false)
+//    @CreatedDate
+//    @CreationTimestamp
+//    private Date createdAt;
+//
+//    @Column(name = "created_by", nullable = false)
+//    @CreatedBy
+//    private int createdBy;
+//
+//    @Column(name = "is_deleted", nullable = false)
+//    @SQLDelete(sql = "UPDATE users SET is_Deleted=true WHERE id=?")
+//    @Where(clause = "is_deleted = false")
+//    private boolean isDeleted;
+//
+//    @Column(name = "updated_at", nullable = false)
+//    private Date updatedAt;
+//
+//    @Column(name = "updated_by", nullable = false)
+//    private int updatedBy;
 
     public User() {
     }
@@ -119,83 +116,83 @@ public class User {
         this.roleId = roleId;
     }
 
-    /**
-     * Gets created at.
-     *
-     * @return the created at
-     */
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * Sets created at.
-     *
-     * @param createdAt the created at
-     */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
-     * Gets created by.
-     *
-     * @return the created by
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    /**
-     * Sets created by.
-     *
-     * @param createdBy the created by
-     */
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    /**
-     * Gets updated at.
-     *
-     * @return the updated at
-     */
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    /**
-     * Sets updated at.
-     *
-     * @param updatedAt the updated at
-     */
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * Gets updated by.
-     *
-     * @return the updated by
-     */
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    /**
-     * Sets updated by.
-     *
-     * @param updatedBy the updated by
-     */
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
+//    /**
+//     * Gets created at.
+//     *
+//     * @return the created at
+//     */
+//    public Date getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    /**
+//     * Sets created at.
+//     *
+//     * @param createdAt the created at
+//     */
+//    public void setCreatedAt(Date createdAt) {
+//        this.createdAt = createdAt;
+//    }
+//
+//    /**
+//     * Gets created by.
+//     *
+//     * @return the created by
+//     */
+//    public int getCreatedBy() {
+//        return createdBy;
+//    }
+//
+//    /**
+//     * Sets created by.
+//     *
+//     * @param createdBy the created by
+//     */
+//    public void setCreatedBy(int createdBy) {
+//        this.createdBy = createdBy;
+//    }
+//
+//    /**
+//     * Gets updated at.
+//     *
+//     * @return the updated at
+//     */
+//    public Date getUpdatedAt() {
+//        return updatedAt;
+//    }
+//
+//    /**
+//     * Sets updated at.
+//     *
+//     * @param updatedAt the updated at
+//     */
+//    public void setUpdatedAt(Date updatedAt) {
+//        this.updatedAt = updatedAt;
+//    }
+//
+//    /**
+//     * Gets updated by.
+//     *
+//     * @return the updated by
+//     */
+//    public int getUpdatedBy() {
+//        return updatedBy;
+//    }
+//
+//    /**
+//     * Sets updated by.
+//     *
+//     * @param updatedBy the updated by
+//     */
+//    public void setUpdatedBy(int updatedBy) {
+//        this.updatedBy = updatedBy;
+//    }
+//
+//    public boolean isDeleted() {
+//        return isDeleted;
+//    }
+//
+//    public void setDeleted(boolean deleted) {
+//        isDeleted = deleted;
+//    }
 }
