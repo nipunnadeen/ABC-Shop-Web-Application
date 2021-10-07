@@ -2,6 +2,7 @@ package com.abc.shop.service;
 
 import com.abc.shop.model.Order;
 import com.abc.shop.model.Product;
+import com.abc.shop.model.User;
 import com.abc.shop.repository.OrderRepository;
 import com.abc.shop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,18 @@ public class OrderServiceImpl implements OrderService {
         try {
             if ((order.getOrderQuantity() > 0 &&
                     productId != null)) {
-                productData = productRepository.findProductByid(productId);
+                User user = new User();
+                user.setId(91);
+                order.setCreatedBy(user);
+
+                Product product = new Product();
+                product.setId(productId);
+                order.setProductId(product);
+                productData = productRepository.findProductById(productId);
                 if (productData != null) {
                     double orderPrice = productData.getProductPrice()*order.getOrderQuantity();
-                    ordersData = new Order(productId, order.getOrderQuantity(), orderPrice,
-                            8, 8);
+                    ordersData = new Order(order.getProductId(), order.getOrderQuantity(), orderPrice,
+                            order.getCreatedBy(), 91);
                     response = new ResponseEntity<>(orderRepository.save(ordersData),
                             HttpStatus.OK);
                 } else {
@@ -94,12 +102,12 @@ public class OrderServiceImpl implements OrderService {
                     orderId != null)) {
                 ordersData = orderRepository.findOrderById(orderId);
                 if (ordersData != null) {
-                    productData = productRepository.findProductByid(ordersData.getProductId());
+                    productData = productRepository.findProductById(ordersData.getProductId());
                     double orderPrice = productData.getProductPrice()*order.getOrderQuantity();
                     ordersData.setOrderQuantity(order.getOrderQuantity());
                     ordersData.setOrderPrice(orderPrice);
                     ordersData.setUpdatedAt(new Date());
-                    ordersData.setUpdatedBy(8);
+                    ordersData.setUpdatedBy(91);
                     ordersData.setProductId(order.getProductId());
                     Order userDetail = orderRepository.save(ordersData);
                     response = new ResponseEntity<>(userDetail, HttpStatus.OK);

@@ -1,6 +1,7 @@
 package com.abc.shop.service;
 
 import com.abc.shop.model.Product;
+import com.abc.shop.model.User;
 import com.abc.shop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,14 +41,21 @@ public class ProductServiceImpl implements ProductService {
         ResponseEntity<Product> response;
         Product productsData;
 
+        User user = new User();
+        user.setId(91);
+//        user.getProducts().add(product);
+        product.setCreatedBy(user);
+
         try {
             if ((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
                     product.getProductDescription() != null)) {
 //                if (productRepository.findUserByName(product.getEmail()) == null) {
+
                     productsData = new Product(product.getProductName(), product.getProductDescription(),
-                            product.getProductQuantity(), product.getProductPrice(), 8,
-                            8, 8, 1);
+                            product.getProductQuantity(), product.getProductPrice(),
+                            product.getCreatedBy(),
+                            91, 91, 1);
 //                    product.setProductName(product.getProductName());
 //                    product.setProductDescription(product.getProductDescription());
 //                    product.setProductPrice(product.getProductPrice());
@@ -76,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
         ResponseEntity<Product> response;
         try {
             if (productId != null && productId > 0) {
-                Product productData = productRepository.findProductByid(productId);
+                Product productData = productRepository.findProductById(productId);
                 if (productData != null) {
                     response = new ResponseEntity<>(productData, HttpStatus.OK);
                 } else {
@@ -100,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
             if((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
                     product.getProductDescription() != null)) {
-                productsData = productRepository.findProductByid(productId);
+                productsData = productRepository.findProductById(productId);
                 if (productsData != null) {
 
                     productsData.setProductName(product.getProductName());
@@ -108,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
                     productsData.setProductQuantity(product.getProductQuantity());
                     productsData.setProductPrice(product.getProductPrice());
                     productsData.setUpdatedAt(new Date());
-                    productsData.setUpdatedBy(8);
+                    productsData.setUpdatedBy(91);
                     productsData.setPromotionId(product.getPromotionId());
 //                    if(products == null ) {
                         Product userDetail = productRepository.save(productsData);
@@ -140,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
         Product productsData;
         try{
             if(productId != null && productId > 0) {
-                productsData = productRepository.findProductByid(productId);
+                productsData = productRepository.findProductById(productId);
                 if (productsData != null) {
                     productsData.setDeletedAt(new Date());
 //                    productRepository.deleteById(productId);

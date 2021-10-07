@@ -11,7 +11,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -37,25 +39,15 @@ public class User {
     @Column(name = "role_id", nullable = false)
     private int roleId;
 
-//    @Column(name = "created_at", nullable = false)
-//    @CreatedDate
-//    @CreationTimestamp
-//    private Date createdAt;
-//
-//    @Column(name = "created_by", nullable = false)
-//    @CreatedBy
-//    private int createdBy;
-//
-//    @Column(name = "is_deleted", nullable = false)
-//    @SQLDelete(sql = "UPDATE users SET is_Deleted=true WHERE id=?")
-//    @Where(clause = "is_deleted = false")
-//    private boolean isDeleted;
-//
-//    @Column(name = "updated_at", nullable = false)
-//    private Date updatedAt;
-//
-//    @Column(name = "updated_by", nullable = false)
-//    private int updatedBy;
+//    @OneToMany(mappedBy = "createdBy")
+//    private List<Product> products = new ArrayList<>();
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     public User() {
     }
@@ -116,7 +108,31 @@ public class User {
         this.roleId = roleId;
     }
 
-//    /**
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    //    public List<Product> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
+
+    //    /**
 //     * Gets created at.
 //     *
 //     * @return the created at

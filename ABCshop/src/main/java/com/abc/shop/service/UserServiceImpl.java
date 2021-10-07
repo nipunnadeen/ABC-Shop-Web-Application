@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         user.setPassword(passwordEncoder.encode(user.getPassword()));
 //                        user.setCreatedBy(user.getName());
 //                        user.setUpdatedBy(user.getName());
+
                     userData = userRepository.save(user);
                     response = new ResponseEntity<>(userData, HttpStatus.OK);
                 } else {

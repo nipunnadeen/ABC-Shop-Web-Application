@@ -2,7 +2,6 @@ package com.abc.shop.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -17,8 +16,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "product_id", nullable = false)
-    private long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product productId;
+
+//    @Column(name = "product_id", nullable = false)
+//    private long productId;
 
     @Column(name = "order_quantity", nullable = false)
     private int orderQuantity;
@@ -31,9 +34,13 @@ public class Order {
     @CreationTimestamp
     private Date createdAt;
 
-    @Column(name = "created_by", nullable = false)
-    @CreatedBy
-    private int createdBy;
+//    @Column(name = "created_by", nullable = false)
+//    @CreatedBy
+//    private int createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
 
     @Column(name = "updated_at")
     private Date updatedAt;
@@ -42,13 +49,21 @@ public class Order {
     private int updatedBy;
 
     @Column(name = "deleted_at")
-    @UpdateTimestamp
     private Date deletedAt;
 
     public Order() {
     }
 
-    public Order(long productId, int orderQuantity, double orderPrice, int createdBy, int updatedBy) {
+//    public Order(long productId, int orderQuantity, double orderPrice, int createdBy, int updatedBy) {
+//        this.productId = productId;
+//        this.orderQuantity = orderQuantity;
+//        this.orderPrice = orderPrice;
+//        this.createdBy = createdBy;
+//        this.updatedBy = updatedBy;
+//    }
+
+
+    public Order(Product productId, int orderQuantity, double orderPrice, User createdBy, int updatedBy) {
         this.productId = productId;
         this.orderQuantity = orderQuantity;
         this.orderPrice = orderPrice;
@@ -64,11 +79,20 @@ public class Order {
         this.id = id;
     }
 
-    public long getProductId() {
+//    public long getProductId() {
+//        return productId;
+//    }
+//
+//    public void setProductId(long productId) {
+//        this.productId = productId;
+//    }
+
+
+    public Product getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(Product productId) {
         this.productId = productId;
     }
 
@@ -96,11 +120,20 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public int getCreatedBy() {
+//    public int getCreatedBy() {
+//        return createdBy;
+//    }
+//
+//    public void setCreatedBy(int createdBy) {
+//        this.createdBy = createdBy;
+//    }
+
+
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 

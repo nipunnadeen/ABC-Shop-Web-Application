@@ -33,17 +33,18 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserDetail(@RequestParam Long userId){
+    public ResponseEntity<User> getUserDetail(@PathVariable("id") Long userId){
         return userService.getUser(userId);
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User userDetails, @RequestParam Long userId){
+    public ResponseEntity<User> updateUser(@RequestBody User userDetails,
+                                           @PathVariable("id") Long userId){
         return userService.updateUser(userDetails, userId);
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity removeUser(@RequestParam Long userId){
+    public ResponseEntity removeUser(@PathVariable("id") Long userId){
         return userService.deleteUser(userId);
     }
 }

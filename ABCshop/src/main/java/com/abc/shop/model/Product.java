@@ -1,10 +1,7 @@
 package com.abc.shop.model;
 
 import net.bytebuddy.implementation.bind.annotation.Default;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -42,20 +41,22 @@ public class Product {
     @CreationTimestamp
     private Date createdAt;
 
-    @Column(name = "created_by")
-    @CreatedBy
-    private int createdBy;
+//    @Column(name = "created_by")
+//    @CreatedBy
+//    private int createdBy;
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
 
     @Column(name = "updated_at")
-//    @LastModifiedDate
-//    @UpdateTimestamp
     private Date updatedAt;
 
     @Column(name = "updated_by")
     private int updatedBy;
 
     @Column(name = "deleted_at")
-    @UpdateTimestamp
     private Date deletedAt;
 
     @Column(name = "deleted_by")
@@ -72,8 +73,7 @@ public class Product {
     }
 
     public Product(String productName, String productDescription, int productQuantity,
-                   double productPrice, int createdBy, int updatedBy, int deletedBy,
-                   int promotionId) {
+                   double productPrice, User createdBy, int updatedBy, int deletedBy, int promotionId) {
         this.productName = productName;
         this.productDescription = productDescription;
         this.productQuantity = productQuantity;
@@ -132,11 +132,20 @@ public class Product {
         this.createdAt = createdAt;
     }
 
-    public int getCreatedBy() {
+//    public int getCreatedBy() {
+//        return createdBy;
+//    }
+//
+//    public void setCreatedBy(int createdBy) {
+//        this.createdBy = createdBy;
+//    }
+
+
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 
