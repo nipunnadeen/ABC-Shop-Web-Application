@@ -30,27 +30,52 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-//    @Bean
-//    public AuthenticationProvider authProvider()
-//    {
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//        provider.setUserDetailsService(userDetailsService);
-//        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-//        return provider;
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        CustomAuthenticationFilter customAuthenticationFilter = new
-//                CustomAuthenticationFilter(authenticationManagerBean());
-//        customAuthenticationFilter.setFilterProcessesUrl("/api/user/login");
+        CustomAuthenticationFilter customAuthenticationFilter = new
+                CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/user/login");
 
         http.csrf().disable();
-//        http.sessionManagement().sessionCreationPolicy(STATELESS);
-//        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
-////        http.authorizeRequests().anyRequest().permitAll();
+        http.sessionManagement().sessionCreationPolicy(STATELESS);
+//        http.formLogin().usernameParameter("email");
+//        http.formLogin().passwordParameter("password");
+        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
+        http.authorizeRequests().anyRequest().permitAll();
 //        http.authorizeRequests().anyRequest().authenticated();
-//        http.addFilter(customAuthenticationFilter);
+//        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+        http.addFilter(customAuthenticationFilter);
+
+
+//        http
+//                .authorizeRequests()
+//
+//                .mvcMatchers("/login").anonymous()
+//                .mvcMatchers("/user/**").hasRole("USER")
+//
+//                .and()
+//                .csrf().disable()
+//                .formLogin()
+//                .loginPage("/login")
+//                .loginProcessingUrl("/login")
+//                .defaultSuccessUrl("/")
+//                .failureUrl("/login?error=true")
+//                .usernameParameter("email")
+//                .passwordParameter("password")
+//
+//                .and()
+//                .exceptionHandling()
+//                .accessDeniedPage("/403")
+//
+//                .and()
+//                .logout()
+//                .permitAll()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/")
+//
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID");
+
     }
 
     @Bean

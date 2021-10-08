@@ -2,6 +2,7 @@ package com.abc.shop.service;
 
 import com.abc.shop.model.User;
 import com.abc.shop.repository.UserRepository;
+import com.abc.shop.utill.CommonUtill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +29,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = userRepository.findUserByName(userName);
-
-//        boolean t = passwordEncoder.matches("",user.getPassword());
-
+        User user = userRepository.findByEmail(userName);
+        if(user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        //authorities is empty check it
+        authorities.add(new SimpleGrantedAuthority("customer"));
+        CommonUtill.userId = user.getId();
         return new org.springframework.security.core.userdetails.
                 User(user.getEmail(), user.getPassword(), authorities);
     }
@@ -59,7 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if ((!user.getName().isEmpty() && user.getAge() > 0 && !user.getEmail().isEmpty()
                     && !user.getPassword().isEmpty()) && (user.getName() != null &&
                     user.getEmail() != null && user.getPassword() != null)) {
-                if (userRepository.findUserByName(user.getEmail()) == null) {
+                if (userRepository.findByEmail(user.getEmail()) == null) {
                         user.setPassword(passwordEncoder.encode(user.getPassword()));
 //                        user.setCreatedBy(user.getName());
 //                        user.setUpdatedBy(user.getName());
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     user.getEmail() != null && user.getEmail() != null)) {
                 userData = userRepository.findUserById(userId);
                 if (userData != null) {
-                    User users = userRepository.findUserByName(user.getEmail());
+                    User users = userRepository.findByEmail(user.getEmail());
 
                     userData.setName(user.getName());
                     userData.setAge(user.getAge());
