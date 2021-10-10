@@ -81,11 +81,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public ResponseEntity<User> getUser(Long userId) {
+    public ResponseEntity<User> getUser() {
         ResponseEntity<User> response;
         try {
-            if (userId != null && userId > 0) {
-                User userData = userRepository.findUserById(userId);
+            if (CommonUtill.userId > 0) {
+                User userData = userRepository.findUserById(CommonUtill.userId);
                 if (userData != null) {
                     response = new ResponseEntity<>(userData, HttpStatus.OK);
                 } else {
@@ -100,15 +100,59 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return response;
     }
 
+//    @Override
+//    public ResponseEntity<User> updateUser(User user, Long userId) {
+//        ResponseEntity<User> response;
+//        User userData;
+//        try {
+//            if((!user.getName().isEmpty() && user.getAge() > 0 && !user.getEmail().isEmpty()
+//                    && !user.getPassword().isEmpty()) && (user.getName() != null &&
+//                    user.getEmail() != null && user.getEmail() != null)) {
+//                userData = userRepository.findUserById(userId);
+//                if (userData != null) {
+//                    User users = userRepository.findByEmail(user.getEmail());
+//
+//                    userData.setName(user.getName());
+//                    userData.setAge(user.getAge());
+//                    userData.setEmail(user.getEmail());
+//                    userData.setPassword(passwordEncoder.encode(user.getPassword()));
+////                    userData.setUpdatedAt(new Date());
+////                    userData.setUpdatedBy(8);
+//
+//
+//                    if(users == null ) {
+//                        User userDetail = userRepository.save(userData);
+//                        response = new ResponseEntity<>(userDetail, HttpStatus.OK);
+//                    } else {
+//                        if(users.getId() == userId ) {
+//                            User userDetail = userRepository.save(userData);
+//                            response = new ResponseEntity<>(userDetail, HttpStatus.OK);
+//                        } else {
+//                            response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+//                        }
+//                    }
+//                } else {
+//                    response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//                }
+//            } else {
+//                response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+//            }
+//        } catch (Exception e){
+//            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        return response;
+//    }
+
     @Override
-    public ResponseEntity<User> updateUser(User user, Long userId) {
+    public ResponseEntity<User> updateUser(User user) {
         ResponseEntity<User> response;
         User userData;
         try {
             if((!user.getName().isEmpty() && user.getAge() > 0 && !user.getEmail().isEmpty()
                     && !user.getPassword().isEmpty()) && (user.getName() != null &&
                     user.getEmail() != null && user.getEmail() != null)) {
-                userData = userRepository.findUserById(userId);
+//                long userId = 108;
+                userData = userRepository.findUserById(CommonUtill.userId);
                 if (userData != null) {
                     User users = userRepository.findByEmail(user.getEmail());
 
@@ -116,7 +160,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     userData.setAge(user.getAge());
                     userData.setEmail(user.getEmail());
                     userData.setPassword(passwordEncoder.encode(user.getPassword()));
-//                    userData.setUpdatedAt(new Date());
+                    userData.setUpdatedAt(new Date());
 //                    userData.setUpdatedBy(8);
 
 
@@ -124,7 +168,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         User userDetail = userRepository.save(userData);
                         response = new ResponseEntity<>(userDetail, HttpStatus.OK);
                     } else {
-                        if(users.getId() == userId ) {
+                        if(users.getId() == CommonUtill.userId ) {
                             User userDetail = userRepository.save(userData);
                             response = new ResponseEntity<>(userDetail, HttpStatus.OK);
                         } else {

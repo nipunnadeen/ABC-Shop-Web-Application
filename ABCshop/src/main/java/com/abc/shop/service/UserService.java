@@ -10,9 +10,11 @@ public interface UserService {
 
     ResponseEntity<User> createUser(User user);
 
-    ResponseEntity<User> getUser(Long userId);
+    ResponseEntity<User> getUser();
 
-    ResponseEntity<User> updateUser(User user, Long userId);
+//    ResponseEntity<User> updateUser(User user, Long userId);
+
+    ResponseEntity<User> updateUser(User user);
 
     ResponseEntity deleteUser(Long userId);
 }

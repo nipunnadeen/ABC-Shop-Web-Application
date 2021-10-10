@@ -1,6 +1,7 @@
 package com.abc.shop.security;
 
 import com.abc.shop.filter.CustomAuthenticationFilter;
+import com.abc.shop.filter.CustomAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -32,19 +34,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new
-                CustomAuthenticationFilter(authenticationManagerBean());
+        CustomAuthenticationFilter customAuthenticationFilter =
+                new CustomAuthenticationFilter(authenticationManagerBean());
+        CustomAuthorizationFilter customAuthorizationFilter =
+                new CustomAuthorizationFilter();
         customAuthenticationFilter.setFilterProcessesUrl("/api/user/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-//        http.formLogin().usernameParameter("email");
-//        http.formLogin().passwordParameter("password");
-        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
-        http.authorizeRequests().anyRequest().permitAll();
+//        http.authorizeRequests().antMatchers("/api/user/login/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/user/register").permitAll();
+        http.authorizeRequests().antMatchers("/api/product/**").authenticated();
+        http.authorizeRequests().antMatchers("/api/user/**").authenticated();
+//        http.authorizeRequests().anyRequest().permitAll();
 //        http.authorizeRequests().anyRequest().authenticated();
-//        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilter(customAuthenticationFilter);
+        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
 //        http
