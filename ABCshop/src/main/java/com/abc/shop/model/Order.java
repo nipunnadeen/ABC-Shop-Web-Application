@@ -20,9 +20,6 @@ public class Order {
     @JoinColumn(name = "product_id", nullable = false)
     private Product productId;
 
-//    @Column(name = "product_id", nullable = false)
-//    private long productId;
-
     @Column(name = "order_quantity", nullable = false)
     private int orderQuantity;
 
@@ -34,10 +31,6 @@ public class Order {
     @CreationTimestamp
     private Date createdAt;
 
-//    @Column(name = "created_by", nullable = false)
-//    @CreatedBy
-//    private int createdBy;
-
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
@@ -45,8 +38,10 @@ public class Order {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "updated_by", nullable = false)
     @Column(name = "updated_by")
-    private int updatedBy;
+    private User updatedBy;
 
     @Column(name = "deleted_at")
     private Date deletedAt;
@@ -54,16 +49,8 @@ public class Order {
     public Order() {
     }
 
-//    public Order(long productId, int orderQuantity, double orderPrice, int createdBy, int updatedBy) {
-//        this.productId = productId;
-//        this.orderQuantity = orderQuantity;
-//        this.orderPrice = orderPrice;
-//        this.createdBy = createdBy;
-//        this.updatedBy = updatedBy;
-//    }
-
-
-    public Order(Product productId, int orderQuantity, double orderPrice, User createdBy, int updatedBy) {
+    public Order(Product productId, int orderQuantity, double orderPrice, User createdBy,
+                 User updatedBy) {
         this.productId = productId;
         this.orderQuantity = orderQuantity;
         this.orderPrice = orderPrice;
@@ -78,15 +65,6 @@ public class Order {
     public void setId(long id) {
         this.id = id;
     }
-
-//    public long getProductId() {
-//        return productId;
-//    }
-//
-//    public void setProductId(long productId) {
-//        this.productId = productId;
-//    }
-
 
     public Product getProductId() {
         return productId;
@@ -120,15 +98,6 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-//    public int getCreatedBy() {
-//        return createdBy;
-//    }
-//
-//    public void setCreatedBy(int createdBy) {
-//        this.createdBy = createdBy;
-//    }
-
-
     public User getCreatedBy() {
         return createdBy;
     }
@@ -145,11 +114,11 @@ public class Order {
         this.updatedAt = updatedAt;
     }
 
-    public int getUpdatedBy() {
+    public User getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(int updatedBy) {
+    public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
     }
 

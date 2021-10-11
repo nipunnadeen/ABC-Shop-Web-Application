@@ -5,6 +5,7 @@ import com.abc.shop.model.Product;
 import com.abc.shop.model.User;
 import com.abc.shop.repository.OrderRepository;
 import com.abc.shop.repository.ProductRepository;
+import com.abc.shop.utill.CommonUtill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,9 @@ public class OrderServiceImpl implements OrderService {
             if ((order.getOrderQuantity() > 0 &&
                     productId != null)) {
                 User user = new User();
-                user.setId(91);
+                user.setId(CommonUtill.userId);
                 order.setCreatedBy(user);
+                order.setUpdatedBy(user);
 
                 Product product = new Product();
                 product.setId(productId);
@@ -55,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
                 if (productData != null) {
                     double orderPrice = productData.getProductPrice()*order.getOrderQuantity();
                     ordersData = new Order(order.getProductId(), order.getOrderQuantity(), orderPrice,
-                            order.getCreatedBy(), 91);
+                            order.getCreatedBy(), order.getUpdatedBy());
                     response = new ResponseEntity<>(orderRepository.save(ordersData),
                             HttpStatus.OK);
                 } else {
@@ -101,13 +103,18 @@ public class OrderServiceImpl implements OrderService {
             if ((order.getOrderQuantity() > 0 &&
                     orderId != null)) {
                 ordersData = orderRepository.findOrderById(orderId);
+
+                User user = new User();
+                user.setId(CommonUtill.userId);
+                order.setUpdatedBy(user);
+
                 if (ordersData != null) {
                     productData = productRepository.findProductById(ordersData.getProductId());
                     double orderPrice = productData.getProductPrice()*order.getOrderQuantity();
                     ordersData.setOrderQuantity(order.getOrderQuantity());
                     ordersData.setOrderPrice(orderPrice);
                     ordersData.setUpdatedAt(new Date());
-                    ordersData.setUpdatedBy(91);
+                    ordersData.setUpdatedBy(order.getUpdatedBy());
                     ordersData.setProductId(order.getProductId());
                     Order userDetail = orderRepository.save(ordersData);
                     response = new ResponseEntity<>(userDetail, HttpStatus.OK);
@@ -134,7 +141,6 @@ public class OrderServiceImpl implements OrderService {
                 ordersData = orderRepository.findOrderById(orderId);
                 if (ordersData != null) {
                     ordersData.setDeletedAt(new Date());
-//                    productRepository.deleteById(productId);
                     response = new ResponseEntity<>(HttpStatus.OK);
                 } else {
                     response = new ResponseEntity<>(("Product not exist with id :" + orderId),
