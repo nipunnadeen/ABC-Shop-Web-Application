@@ -23,6 +23,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    private Long userId = CommonUtill.userId;
+
     @Override
     public ResponseEntity<List<Order>> getAllOrders() {
         ResponseEntity<List<Order>> response;
@@ -43,10 +45,9 @@ public class OrderServiceImpl implements OrderService {
         Product productData;
 
         try {
-            if ((order.getOrderQuantity() > 0 &&
-                    productId != null)) {
+            if ((order.getOrderQuantity() > 0 && productId != null) && userId != null) {
                 User user = new User();
-                user.setId(CommonUtill.userId);
+                user.setId(userId);
                 order.setCreatedBy(user);
                 order.setUpdatedBy(user);
 
@@ -55,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setProductId(product);
                 productData = productRepository.findProductById(productId);
                 if (productData != null) {
-                    double orderPrice = productData.getProductPrice()*order.getOrderQuantity();
+                    double orderPrice = productData.getProductPrice() * order.getOrderQuantity();
                     ordersData = new Order(order.getProductId(), order.getOrderQuantity(), orderPrice,
                             order.getCreatedBy(), order.getUpdatedBy());
                     response = new ResponseEntity<>(orderRepository.save(ordersData),
@@ -100,17 +101,16 @@ public class OrderServiceImpl implements OrderService {
         Product productData;
 
         try {
-            if ((order.getOrderQuantity() > 0 &&
-                    orderId != null)) {
+            if ((order.getOrderQuantity() > 0 && orderId != null) && userId != null) {
                 ordersData = orderRepository.findOrderById(orderId);
 
                 User user = new User();
-                user.setId(CommonUtill.userId);
+                user.setId(userId);
                 order.setUpdatedBy(user);
 
                 if (ordersData != null) {
                     productData = productRepository.findProductById(ordersData.getProductId());
-                    double orderPrice = productData.getProductPrice()*order.getOrderQuantity();
+                    double orderPrice = productData.getProductPrice() * order.getOrderQuantity();
                     ordersData.setOrderQuantity(order.getOrderQuantity());
                     ordersData.setOrderPrice(orderPrice);
                     ordersData.setUpdatedAt(new Date());
@@ -124,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
@@ -136,8 +136,8 @@ public class OrderServiceImpl implements OrderService {
         ResponseEntity response;
         Order ordersData;
 
-        try{
-            if(orderId != null) {
+        try {
+            if (orderId != null) {
                 ordersData = orderRepository.findOrderById(orderId);
                 if (ordersData != null) {
                     ordersData.setDeletedAt(new Date());
@@ -151,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
                         HttpStatus.NOT_ACCEPTABLE);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             response = new ResponseEntity<>("Something went wrong",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

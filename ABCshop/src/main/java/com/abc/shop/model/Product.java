@@ -54,14 +54,14 @@ public class Product {
     private Date updatedAt;
 
     @Column(name = "updated_by")
-    private int updatedBy;
+    private long updatedBy;
 
     @Column(name = "deleted_at")
     private Date deletedAt;
 
     @Column(name = "deleted_by")
 //    @LastModifiedBy
-    private int deletedBy;
+    private long deletedBy;
 
     @Column(name = "promotion_id")
     private int promotionId;
@@ -73,7 +73,7 @@ public class Product {
     }
 
     public Product(String productName, String productDescription, int productQuantity,
-                   double productPrice, User createdBy, int updatedBy, int deletedBy, int promotionId) {
+                   double productPrice, User createdBy, long updatedBy, long deletedBy, int promotionId) {
         this.productName = productName;
         this.productDescription = productDescription;
         this.productQuantity = productQuantity;
@@ -132,15 +132,6 @@ public class Product {
         this.createdAt = createdAt;
     }
 
-//    public int getCreatedBy() {
-//        return createdBy;
-//    }
-//
-//    public void setCreatedBy(int createdBy) {
-//        this.createdBy = createdBy;
-//    }
-
-
     public User getCreatedBy() {
         return createdBy;
     }
@@ -157,11 +148,11 @@ public class Product {
         this.deletedAt = deletedAt;
     }
 
-    public int getDeletedBy() {
+    public long getDeletedBy() {
         return deletedBy;
     }
 
-    public void setDeletedBy(int deletedBy) {
+    public void setDeletedBy(long deletedBy) {
         this.deletedBy = deletedBy;
     }
 
@@ -173,11 +164,11 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public int getUpdatedBy() {
+    public long getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(int updatedBy) {
+    public void setUpdatedBy(long updatedBy) {
         this.updatedBy = updatedBy;
     }
 

@@ -3,6 +3,7 @@ package com.abc.shop.service;
 import com.abc.shop.model.Product;
 import com.abc.shop.model.User;
 import com.abc.shop.repository.ProductRepository;
+import com.abc.shop.utill.CommonUtill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    private Long userId = CommonUtill.userId;
+
     @Override
     public ResponseEntity<List<Product>> getAllProducts() {
         ResponseEntity<List<Product>> response;
@@ -30,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 //                }
 //            }
             response = new ResponseEntity<>(productsData, HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
@@ -41,34 +44,20 @@ public class ProductServiceImpl implements ProductService {
         ResponseEntity<Product> response;
         Product productsData;
 
-        User user = new User();
-        user.setId(91);
-//        user.getProducts().add(product);
-        product.setCreatedBy(user);
-
         try {
             if ((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
-                    product.getProductDescription() != null)) {
-//                if (productRepository.findUserByName(product.getEmail()) == null) {
+                    product.getProductDescription() != null) && userId != null) {
+                User user = new User();
+                user.setId(userId);
+                product.setCreatedBy(user);
+                productsData = new Product(product.getProductName(), product.getProductDescription(),
+                        product.getProductQuantity(), product.getProductPrice(),
+                        product.getCreatedBy(),
+                        userId, userId, product.getPromotionId());
+                response = new ResponseEntity<>(productRepository.save(productsData),
+                        HttpStatus.OK);
 
-                    productsData = new Product(product.getProductName(), product.getProductDescription(),
-                            product.getProductQuantity(), product.getProductPrice(),
-                            product.getCreatedBy(),
-                            91, 91, 1);
-//                    product.setProductName(product.getProductName());
-//                    product.setProductDescription(product.getProductDescription());
-//                    product.setProductPrice(product.getProductPrice());
-//                    product.setCreatedBy(8);
-//                    product.setUpdatedBy(8);
-//                    product.setDeletedBy(8);
-//                    product.setPromotionId(product.getPromotionId());
-//                    productsData = productRepository.save(productsData);
-                    response = new ResponseEntity<>(productRepository.save(productsData),
-                            HttpStatus.OK);
-//                } else {
-//                    response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//                }
             } else {
                 response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
@@ -80,7 +69,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<Product> getProduct(Long productId) {
-
         ResponseEntity<Product> response;
         try {
             if (productId != null && productId > 0) {
@@ -105,9 +93,9 @@ public class ProductServiceImpl implements ProductService {
         Product productsData;
 
         try {
-            if((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
+            if ((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
-                    product.getProductDescription() != null)) {
+                    product.getProductDescription() != null) && userId != null) {
                 productsData = productRepository.findProductById(productId);
                 if (productsData != null) {
 
@@ -116,26 +104,17 @@ public class ProductServiceImpl implements ProductService {
                     productsData.setProductQuantity(product.getProductQuantity());
                     productsData.setProductPrice(product.getProductPrice());
                     productsData.setUpdatedAt(new Date());
-                    productsData.setUpdatedBy(91);
+                    productsData.setUpdatedBy(userId);
                     productsData.setPromotionId(product.getPromotionId());
-//                    if(products == null ) {
-                        Product userDetail = productRepository.save(productsData);
-                        response = new ResponseEntity<>(userDetail, HttpStatus.OK);
-//                    } else {
-//                        if(products.getId() == productId ) {
-//                            Product productDetail = productRepository.save(productsData);
-//                            response = new ResponseEntity<>(productDetail, HttpStatus.OK);
-//                        } else {
-//                            response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-//                        }
-//                    }
+                    Product userDetail = productRepository.save(productsData);
+                    response = new ResponseEntity<>(userDetail, HttpStatus.OK);
                 } else {
                     response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
             } else {
                 response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
@@ -146,23 +125,27 @@ public class ProductServiceImpl implements ProductService {
 
         ResponseEntity response;
         Product productsData;
-        try{
-            if(productId != null && productId > 0) {
-                productsData = productRepository.findProductById(productId);
-                if (productsData != null) {
-                    productsData.setDeletedAt(new Date());
-//                    productRepository.deleteById(productId);
-                    response = new ResponseEntity<>(HttpStatus.OK);
+        try {
+            if (productId != null && productId > 0) {
+                if (userId != null) {
+                    productsData = productRepository.findProductById(productId);
+                    if (productsData != null) {
+                        productsData.setDeletedAt(new Date());
+                        response = new ResponseEntity<>(HttpStatus.OK);
+                    } else {
+                        response = new ResponseEntity<>(("Product not exist with id :" + productId),
+                                HttpStatus.NOT_FOUND);
+                    }
                 } else {
-                    response = new ResponseEntity<>(("Product not exist with id :" + productId),
-                            HttpStatus.NOT_FOUND);
+                    response = new ResponseEntity<>(("User Id is not acceptable"),
+                            HttpStatus.NOT_ACCEPTABLE);
                 }
             } else {
                 response = new ResponseEntity<>(("Product Id is not acceptable"),
                         HttpStatus.NOT_ACCEPTABLE);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             response = new ResponseEntity<>("Something went wrong",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

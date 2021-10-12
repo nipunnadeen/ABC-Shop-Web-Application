@@ -2,6 +2,7 @@ package com.abc.shop.service;
 
 import com.abc.shop.model.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,11 +11,11 @@ public interface UserService {
 
     ResponseEntity<User> createUser(User user);
 
-    ResponseEntity<User> getUser();
+    ResponseEntity<User> getUser(Long userId);
 
-//    ResponseEntity<User> updateUser(User user, Long userId);
+    ResponseEntity<User> updateUser(User user, Long userId);
 
-    ResponseEntity<User> updateUser(User user);
+//    ResponseEntity updateUserProfile(MultipartFile file, Long userId);
 
     ResponseEntity deleteUser(Long userId);
 }

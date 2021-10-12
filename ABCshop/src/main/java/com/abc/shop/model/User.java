@@ -1,19 +1,10 @@
 package com.abc.shop.model;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -38,9 +29,6 @@ public class User {
 
     @Column(name = "role_id", nullable = false)
     private int roleId;
-
-//    @OneToMany(mappedBy = "createdBy")
-//    private List<Product> products = new ArrayList<>();
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -123,92 +111,4 @@ public class User {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    //    public List<Product> getProducts() {
-//        return products;
-//    }
-//
-//    public void setProducts(List<Product> products) {
-//        this.products = products;
-//    }
-
-    //    /**
-//     * Gets created at.
-//     *
-//     * @return the created at
-//     */
-//    public Date getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    /**
-//     * Sets created at.
-//     *
-//     * @param createdAt the created at
-//     */
-//    public void setCreatedAt(Date createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    /**
-//     * Gets created by.
-//     *
-//     * @return the created by
-//     */
-//    public int getCreatedBy() {
-//        return createdBy;
-//    }
-//
-//    /**
-//     * Sets created by.
-//     *
-//     * @param createdBy the created by
-//     */
-//    public void setCreatedBy(int createdBy) {
-//        this.createdBy = createdBy;
-//    }
-//
-//    /**
-//     * Gets updated at.
-//     *
-//     * @return the updated at
-//     */
-//    public Date getUpdatedAt() {
-//        return updatedAt;
-//    }
-//
-//    /**
-//     * Sets updated at.
-//     *
-//     * @param updatedAt the updated at
-//     */
-//    public void setUpdatedAt(Date updatedAt) {
-//        this.updatedAt = updatedAt;
-//    }
-//
-//    /**
-//     * Gets updated by.
-//     *
-//     * @return the updated by
-//     */
-//    public int getUpdatedBy() {
-//        return updatedBy;
-//    }
-//
-//    /**
-//     * Sets updated by.
-//     *
-//     * @param updatedBy the updated by
-//     */
-//    public void setUpdatedBy(int updatedBy) {
-//        this.updatedBy = updatedBy;
-//    }
-//
-//    public boolean isDeleted() {
-//        return isDeleted;
-//    }
-//
-//    public void setDeleted(boolean deleted) {
-//        isDeleted = deleted;
-//    }
 }
