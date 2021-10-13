@@ -150,7 +150,6 @@ public class OrderServiceImpl implements OrderService {
                 response = new ResponseEntity<>(("Product Id is not acceptable"),
                         HttpStatus.NOT_ACCEPTABLE);
             }
-
         } catch (Exception e) {
             response = new ResponseEntity<>("Something went wrong",
                     HttpStatus.INTERNAL_SERVER_ERROR);

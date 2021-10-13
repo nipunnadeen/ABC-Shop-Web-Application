@@ -53,8 +53,9 @@ public class Product {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Column(name = "updated_by")
-    private long updatedBy;
+    @ManyToOne
+    @JoinColumn(name = "updated_by", nullable = false)
+    private User updatedBy;
 
     @Column(name = "deleted_at")
     private Date deletedAt;
@@ -63,8 +64,10 @@ public class Product {
 //    @LastModifiedBy
     private long deletedBy;
 
-    @Column(name = "promotion_id")
-    private int promotionId;
+    @ManyToOne
+    @JoinColumn(name = "promotion_id", nullable = false)
+//    @Column(name = "promotion_id")
+    private Promotion promotionId;
 
 //    @Column(name = "promotion_id", insertable = false)
 //    private int promotionId;
@@ -73,7 +76,8 @@ public class Product {
     }
 
     public Product(String productName, String productDescription, int productQuantity,
-                   double productPrice, User createdBy, long updatedBy, long deletedBy, int promotionId) {
+                   double productPrice, User createdBy, User updatedBy, long deletedBy,
+                   Promotion promotionId) {
         this.productName = productName;
         this.productDescription = productDescription;
         this.productQuantity = productQuantity;
@@ -164,19 +168,19 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public long getUpdatedBy() {
+    public User getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(long updatedBy) {
+    public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
     }
 
-    public int getPromotionId() {
+    public Promotion getPromotionId() {
         return promotionId;
     }
 
-    public void setPromotionId(int promotionId) {
+    public void setPromotionId(Promotion promotionId) {
         this.promotionId = promotionId;
     }
 }

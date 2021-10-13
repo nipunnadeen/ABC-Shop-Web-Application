@@ -40,7 +40,6 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "updated_by", nullable = false)
-    @Column(name = "updated_by")
     private User updatedBy;
 
     @Column(name = "deleted_at")

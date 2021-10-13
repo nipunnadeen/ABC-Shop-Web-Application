@@ -1,7 +1,7 @@
 package com.abc.shop.service;
 
-import com.abc.shop.FileStore.FileStore;
-//import com.abc.shop.bucket.BucketName;
+//import com.abc.shop.FileStore.FileStore;
+import com.abc.shop.bucket.BucketName;
 import com.abc.shop.model.User;
 import com.abc.shop.repository.UserRepository;
 import com.abc.shop.utill.CommonUtill;
@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private FileStore fileStore;
+//    @Autowired
+//    private FileStore fileStore;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {

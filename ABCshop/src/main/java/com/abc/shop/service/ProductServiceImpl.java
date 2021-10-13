@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
                 productsData = new Product(product.getProductName(), product.getProductDescription(),
                         product.getProductQuantity(), product.getProductPrice(),
                         product.getCreatedBy(),
-                        userId, userId, product.getPromotionId());
+                        product.getCreatedBy(), userId, product.getPromotionId());
                 response = new ResponseEntity<>(productRepository.save(productsData),
                         HttpStatus.OK);
 
@@ -97,6 +97,9 @@ public class ProductServiceImpl implements ProductService {
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
                     product.getProductDescription() != null) && userId != null) {
                 productsData = productRepository.findProductById(productId);
+                User user = new User();
+                user.setId(userId);
+                product.setUpdatedBy(user);
                 if (productsData != null) {
 
                     productsData.setProductName(product.getProductName());
@@ -104,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
                     productsData.setProductQuantity(product.getProductQuantity());
                     productsData.setProductPrice(product.getProductPrice());
                     productsData.setUpdatedAt(new Date());
-                    productsData.setUpdatedBy(userId);
+                    productsData.setUpdatedBy(product.getUpdatedBy());
                     productsData.setPromotionId(product.getPromotionId());
                     Product userDetail = productRepository.save(productsData);
                     response = new ResponseEntity<>(userDetail, HttpStatus.OK);
