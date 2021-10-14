@@ -15,20 +15,8 @@ class ShopApplicationTests {
         int l = 3;
 
         int result = k+l;
-        int expected = 10;
+        int expected = 8;
 
         assertThat(result).isEqualTo(expected);
     }
-
-    @Test
-    void contextLoads1() {
-        int k = 6;
-        int l = 3;
-
-        int result = k+l;
-        int expected = 9;
-
-        assertThat(result).isEqualTo(expected);
-    }
-
 }
