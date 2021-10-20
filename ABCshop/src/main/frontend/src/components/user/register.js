@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import axios from "axios";
+import {Link} from 'react-router-dom';
 
 class Register extends Component {
 
@@ -9,8 +10,7 @@ class Register extends Component {
     };
 
     sendUserData = () => {
-        axios.post("sdfsdfsdfsdfsdf").then(res => {
-
+        axios.post("http://localhost:8080/api/user/register", this.state.data).then(res => {
             if (res.status === 200) {
                 this.state.isUserRegistered(true);
             } else {
@@ -28,7 +28,7 @@ class Register extends Component {
         data.age = e.target.age.value;
         data.address = e.target.address.value;
 
-        this.setState({ data });
+        this.setState({data});
         this.sendUserData();
     }
 
@@ -45,17 +45,21 @@ class Register extends Component {
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <label>Name</label>
-                    <input type={"text"} name={"name"} placeholder={"Name"}/>
+                    <input type={"text"} name={"name"} placeholder={"Name"} />
                     <label>Email</label>
-                    <input type={"text"} name={"email"}  onChange={this.handleEmailChange} placeholder={"Email"}/>
+                    <input type={"text"} name={"email"} onChange={this.handleEmailChange} placeholder={"Email"}/>
                     <label>Password</label>
-                    <input type={"password"} name={"password"} onChange={this.handlePasswordChange} placeholder={"Password"}/>
+                    <input type={"password"} name={"password"} onChange={this.handlePasswordChange}
+                           placeholder={"Password"}/>
                     <label>Age</label>
                     <input type={"number"} name={"age"} placeholder={"Age"}/>
                     <label>Address</label>
                     <input type={"text"} name={"address"} placeholder={"Address"}/>
-                    <button> Register </button>
+                    <button> Register</button>
                 </form>
+                <Link to="/login">
+                        Already have an account ? Sign in here
+                </Link>
             </div>
         );
     }
