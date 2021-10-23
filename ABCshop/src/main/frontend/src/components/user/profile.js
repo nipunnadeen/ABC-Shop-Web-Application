@@ -1,19 +1,31 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Link, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
-// import {ActionCreators} from "../../actions/userAction";
+import {ActionCreators} from "../../actions/userAction";
 
-class Dashboard extends Component {
+class Profile extends Component {
 
     state = {
-        isUserRegistered: false,
+        isUserUpdated: false,
         data: {},
         submitted: false
     };
 
     sendUserData = () => {
-        axios.post("http://localhost:8080/api/user/register", this.state.data).then(res => {
+        axios.post("http://localhost:8080/api/user/update", this.props.userUpdateData,
+            { headers: {"Authorization" : `Bearer ${this.props.userTokens}`} }).then(res => {
+            if (res.status === 200) {
+                this.state.isUserRegistered(true);
+            } else {
+
+            }
+        })
+    }
+
+    sendUserProfileImage = () => {
+        axios.post("http://localhost:8080/api/user/updateProfile", this.props.userUpdateData,
+            { headers: {"Authorization" : `Bearer ${this.props.userTokens}`} }).then(res => {
             if (res.status === 200) {
                 this.state.isUserRegistered(true);
             } else {
@@ -25,7 +37,7 @@ class Dashboard extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.setState({submitted: true})
-        // this.props.dispatch(ActionCreators.formSubmittionStatus(true))
+        this.props.dispatch(ActionCreators.formSubmittionStatus(true))
         const {data} = this.state;
         data.name = e.target.name.value;
         data.email = e.target.email.value;
@@ -33,11 +45,20 @@ class Dashboard extends Component {
         data.age = e.target.age.value;
         data.address = e.target.address.value;
 
-        // this.props.dispatch(ActionCreators.addProfile(data));
+        this.props.dispatch(ActionCreators.updateProfile(data));
 
         // this.setState({data});
-        // console.log(this.props.getState())
+        console.log(this.props.userRegisterData)
         this.sendUserData();
+    }
+
+    handleProfileImage = (e) => {
+        e.preventDefault();
+        const {data} = this.state;
+
+        this.props.dispatch(ActionCreators.updateProfileImage(data));
+
+        this.sendUserProfileImage();
     }
 
     handleEmailChange = (e) => {
@@ -51,6 +72,9 @@ class Dashboard extends Component {
     render() {
         return (
             <div>
+                <div>
+
+                </div>
                 <form onSubmit={this.handleSubmit}>
                     <label>Name</label>
                     <input type={"text"} name={"name"} placeholder={"Name"} />
@@ -65,9 +89,6 @@ class Dashboard extends Component {
                     <input type={"text"} name={"address"} placeholder={"Address"}/>
                     <button> Register</button>
                 </form>
-                <Link to="/login">
-                    Already have an account ? Sign in here
-                </Link>
             </div>
         );
     }
@@ -75,9 +96,9 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        profile: state.data
+        userUpdateData: state.user.profile,
+        userTokens: state.user.authTokens
     }
 }
 
-export default connect(mapStateToProps)(withRouter(Dashboard));
-// export default Register;
+export default connect(mapStateToProps)(withRouter(Profile));

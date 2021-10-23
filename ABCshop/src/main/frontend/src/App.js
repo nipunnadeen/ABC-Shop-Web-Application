@@ -4,6 +4,7 @@ import Register from "./components/user/register";
 import Login from "./components/user/login";
 import { BrowserRouter, Route, Switch} from "react-router-dom";
 import React from "react";
+import Dashboard from "./components/dashboard";
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
                 <Route exact path="/home" component={Login} />
                 <Route path="/login" component={Login} />
                 <Route path = "/register" component={Register} />
+                <Route path = "/dashboard" component={Dashboard} />
             </Switch>
         </BrowserRouter>
     </div>

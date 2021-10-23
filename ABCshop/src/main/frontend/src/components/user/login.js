@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
+import {ActionCreators} from "../../actions/userAction";
+import {connect} from "react-redux";
 
 class Login extends Component {
 
@@ -9,26 +11,18 @@ class Login extends Component {
         accessToken: "",
         refreshToken: "",
         data: {},
-        errorMessage: ""
+        errorMessage: "",
+        responseData: {}
     };
 
-    // sendUserLoginData = () => {
-    //     axios.post("http://localhost:8080/api/user/login", this.state.data,
-    //         { headers: {"Authorization" : `Bearer ${config.accessToken}`} }).then(res => {
-    //         if (res.status === 200) {
-    //             this.state.isUserLogged(true);
-    //         } else {
-    //
-    //         }
-    //     })
-    // }
-
     sendUserLoginData = () => {
-        axios.post("http://localhost:8080/api/user/login", this.state.data).then(res => {
+        axios.post("http://localhost:8080/api/user/login", this.props.userLoginData).then(res => {
             if (res.status === 200) {
                 this.state.isUserLogged(true);
-                this.setState({accessToken: res.data.accessToken})
-                this.setState({refreshToken: res.data.refreshToken})
+                const {responseData} = this.state;
+                responseData.accessToken = res.data.accessToken;
+                responseData.refreshToken = res.data.refreshToken;
+                this.props.dispatch(ActionCreators.getUserAuthTokens(responseData));
             } else if(res.status === 403) {
                 this.setState({errorMessage: "Incorrect Username & Password"})
             }
@@ -37,13 +31,27 @@ class Login extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        this.props.dispatch(ActionCreators.formSubmittionStatus(true))
         const {data} = this.state;
         data.email = e.target.email.value;
         data.password = e.target.password.value;
 
         this.setState({data});
+        this.props.dispatch(ActionCreators.login(data));
         this.sendUserLoginData();
     }
+
+    // handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     const {data} = this.state;
+    //     data.email = e.target.email.value;
+    //     data.password = e.target.password.value;
+    //
+    //     this.setState({data});
+    //     this.sendUserLoginData();
+    // }
+
+
 
     render() {
         return (
@@ -64,4 +72,13 @@ class Login extends Component {
     }
 }
 
-export default Login;
+// export default Login;
+const mapStateToProps = (state) => {
+    console.log(state)
+    return {
+        userLoginData: state.user.profile
+        //auth token connection should be here
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(Login));

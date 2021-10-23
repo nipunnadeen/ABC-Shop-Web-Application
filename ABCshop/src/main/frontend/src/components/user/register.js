@@ -1,16 +1,19 @@
 import React, {Component} from "react";
 import axios from "axios";
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+import {ActionCreators} from "../../actions/userAction";
 
 class Register extends Component {
 
     state = {
         isUserRegistered: false,
-        data: {}
+        data: {},
+        submitted: false
     };
 
     sendUserData = () => {
-        axios.post("http://localhost:8080/api/user/register", this.state.data).then(res => {
+        axios.post("http://localhost:8080/api/user/register", this.props.userRegisterData).then(res => {
             if (res.status === 200) {
                 this.state.isUserRegistered(true);
             } else {
@@ -21,6 +24,8 @@ class Register extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        this.setState({submitted: true})
+        this.props.dispatch(ActionCreators.formSubmittionStatus(true))
         const {data} = this.state;
         data.name = e.target.name.value;
         data.email = e.target.email.value;
@@ -28,7 +33,10 @@ class Register extends Component {
         data.age = e.target.age.value;
         data.address = e.target.address.value;
 
-        this.setState({data});
+        this.props.dispatch(ActionCreators.addProfile(data));
+
+        // this.setState({data});
+        console.log(this.props.userRegisterData)
         this.sendUserData();
     }
 
@@ -72,7 +80,6 @@ class Register extends Component {
 //
 //     const sendUserData = () => {
 //         axios.post("sdfsdfsdfsdfsdf").then(res => {
-//             console.log(res);
 //             const data = res.data;
 //             setUserProfiles(data);
 //         })
@@ -96,4 +103,10 @@ class Register extends Component {
 //     );
 // }
 
-export default Register;
+const mapStateToProps = (state) => {
+    return {
+        userRegisterData: state.user.profile
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(Register));

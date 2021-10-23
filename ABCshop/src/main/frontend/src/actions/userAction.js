@@ -10,5 +10,7 @@ export const ActionCreators = {
 
     formSubmittionStatus: (status) => ({ type: Types.FORM_SUBMITION_STATUS, payload: { status }}),
 
-    login: (user) => ({ type: Types.LOGIN, payload: { user } })
+    login: (user) => ({ type: Types.LOGIN, payload: { user } }),
+
+    getUserAuthTokens: (user) => ({ type: Types.GET_USER_AUTH_TOKENS, payload: { user } })
 }
