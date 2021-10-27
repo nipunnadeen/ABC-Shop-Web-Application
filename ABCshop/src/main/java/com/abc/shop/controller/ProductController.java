@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -16,9 +17,15 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam Optional<Integer> page,
+                                                        @RequestParam Optional<String> sortBy) {
+        return productService.getAllProducts(page, sortBy);
     }
+
+//    @GetMapping("/product")
+//    public ResponseEntity<List<Product>> getAllProducts() {
+//        return productService.getAllProducts();
+//    }
 
     @PostMapping("/product/create")
     public ResponseEntity<Product> createProduct(@RequestBody Product product){

@@ -1,16 +1,21 @@
 package com.abc.shop.service;
 
 import com.abc.shop.model.Product;
+import com.abc.shop.model.Promotion;
 import com.abc.shop.model.User;
 import com.abc.shop.repository.ProductRepository;
 import com.abc.shop.utill.CommonUtill;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -18,21 +23,24 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    private Long userId = CommonUtill.userId;
-
     @Override
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProducts(Optional<Integer> page,
+                                                        Optional<String> sortBy) {
         ResponseEntity<List<Product>> response;
-        List<Product> productsData;
+        Page<Product> productsData;
         try {
-            productsData = productRepository.findAll();
+            productsData = productRepository.findAll(
+                    PageRequest.of(
+                           page.orElse(0), 1, Sort.Direction.ASC, sortBy.orElse("id")
+                    )
+            );
 //            for(int i=0; i<productsData.size(); i++){
 //                Product specificProduct  = productsData.get(i);
-//                if(specificProduct.getDeletedAt() == null){
+//                if(specificProduct.getDeletedAt() != null){
 //                    productsData.remove(specificProduct);
 //                }
 //            }
-            response = new ResponseEntity<>(productsData, HttpStatus.OK);
+            response = new ResponseEntity(productsData, HttpStatus.OK);
         } catch (Exception e) {
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -43,14 +51,20 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<Product> createProduct(Product product) {
         ResponseEntity<Product> response;
         Product productsData;
+        long userId = CommonUtill.userId;
 
         try {
             if ((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
-                    product.getProductDescription() != null) && userId != null) {
+                    product.getProductDescription() != null)) {
                 User user = new User();
+
                 user.setId(userId);
                 product.setCreatedBy(user);
+
+                Promotion promotion = new Promotion();
+                promotion.setId(product.getProductPromoId());
+                product.setPromotionId(promotion);
                 productsData = new Product(product.getProductName(), product.getProductDescription(),
                         product.getProductQuantity(), product.getProductPrice(),
                         product.getCreatedBy(),
@@ -91,11 +105,12 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<Product> updateProduct(Product product, Long productId) {
         ResponseEntity<Product> response;
         Product productsData;
+        long userId = CommonUtill.userId;
 
         try {
             if ((!product.getProductName().isEmpty() && product.getProductPrice() > 0 &&
                     !product.getProductDescription().isEmpty()) && (product.getProductName() != null &&
-                    product.getProductDescription() != null) && userId != null) {
+                    product.getProductDescription() != null)) {
                 productsData = productRepository.findProductById(productId);
                 User user = new User();
                 user.setId(userId);
@@ -128,12 +143,14 @@ public class ProductServiceImpl implements ProductService {
 
         ResponseEntity response;
         Product productsData;
+        long userId = CommonUtill.userId;
         try {
             if (productId != null && productId > 0) {
-                if (userId != null) {
+                if (userId != 0) {
                     productsData = productRepository.findProductById(productId);
                     if (productsData != null) {
                         productsData.setDeletedAt(new Date());
+                        productRepository.save(productsData);
                         response = new ResponseEntity<>(HttpStatus.OK);
                     } else {
                         response = new ResponseEntity<>(("Product not exist with id :" + productId),

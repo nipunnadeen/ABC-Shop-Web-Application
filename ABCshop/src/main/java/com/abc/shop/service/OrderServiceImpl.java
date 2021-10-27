@@ -23,8 +23,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    private Long userId = CommonUtill.userId;
-
     @Override
     public ResponseEntity<List<Order>> getAllOrders() {
         ResponseEntity<List<Order>> response;
@@ -43,9 +41,10 @@ public class OrderServiceImpl implements OrderService {
         ResponseEntity<Order> response;
         Order ordersData;
         Product productData;
+        long userId = CommonUtill.userId;
 
         try {
-            if ((order.getOrderQuantity() > 0 && productId != null) && userId != null) {
+            if (order.getOrderQuantity() > 0 && productId != null) {
                 User user = new User();
                 user.setId(userId);
                 order.setCreatedBy(user);
@@ -99,9 +98,10 @@ public class OrderServiceImpl implements OrderService {
         ResponseEntity<Order> response;
         Order ordersData;
         Product productData;
+        long userId = CommonUtill.userId;
 
         try {
-            if ((order.getOrderQuantity() > 0 && orderId != null) && userId != null) {
+            if (order.getOrderQuantity() > 0 && orderId != null) {
                 ordersData = orderRepository.findOrderById(orderId);
 
                 User user = new User();

@@ -1,18 +1,12 @@
 package com.abc.shop.model;
 
-import net.bytebuddy.implementation.bind.annotation.Default;
 import org.hibernate.annotations.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -41,10 +35,6 @@ public class Product {
     @CreationTimestamp
     private Date createdAt;
 
-//    @Column(name = "created_by")
-//    @CreatedBy
-//    private int createdBy;
-
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
@@ -61,19 +51,29 @@ public class Product {
     private Date deletedAt;
 
     @Column(name = "deleted_by")
-//    @LastModifiedBy
     private long deletedBy;
 
     @ManyToOne
     @JoinColumn(name = "promotion_id", nullable = false)
-//    @Column(name = "promotion_id")
     private Promotion promotionId;
 
-//    @Column(name = "promotion_id", insertable = false)
-//    private int promotionId;
+    private long productPromoId;
 
     public Product() {
     }
+
+//    public Product(String productName, String productDescription, int productQuantity,
+//                   double productPrice, User createdBy, User updatedBy, long deletedBy, long promotionId) {
+//        this.productName = productName;
+//        this.productDescription = productDescription;
+//        this.productQuantity = productQuantity;
+//        this.productPrice = productPrice;
+//        this.createdBy = createdBy;
+//        this.updatedBy = updatedBy;
+//        this.deletedBy = deletedBy;
+//        this.promotionId = promotionId;
+//    }
+
 
     public Product(String productName, String productDescription, int productQuantity,
                    double productPrice, User createdBy, User updatedBy, long deletedBy,
@@ -182,5 +182,13 @@ public class Product {
 
     public void setPromotionId(Promotion promotionId) {
         this.promotionId = promotionId;
+    }
+
+    public long getProductPromoId() {
+        return productPromoId;
+    }
+
+    public void setProductPromoId(long productPromoId) {
+        this.productPromoId = productPromoId;
     }
 }

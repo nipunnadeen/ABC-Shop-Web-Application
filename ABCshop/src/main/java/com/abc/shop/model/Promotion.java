@@ -25,6 +25,12 @@ public class Promotion {
     public Promotion() {
     }
 
+    public Promotion(String promotionName, String promotionDescription, double promotionPrice) {
+        this.promotionName = promotionName;
+        this.promotionDescription = promotionDescription;
+        this.promotionPrice = promotionPrice;
+    }
+
     public long getId() {
         return id;
     }
