@@ -10,27 +10,28 @@ class ProductManage extends Component {
         isProductUpdated: false,
         isProductCreated: false,
         data: {},
-        submitted: false
+        submitted: false,
+        errorMessage: ""
     };
 
     sendProductCreateData = () => {
-        axios.post("http://localhost:8080/api/user/createProd", this.props.userUpdateData,
+        axios.post("http://localhost:8080/api/user/createProduct", this.props.productData,
             { headers: {"Authorization" : `Bearer ${this.props.userTokens}`} }).then(res => {
             if (res.status === 200) {
                 this.state.isUserRegistered(true);
             } else {
-
+                this.setState({errorMessage: "Incorrect Username & Password"})
             }
         })
     }
 
     sendProductUpdateData = () => {
-        axios.post("http://localhost:8080/api/user/updateProduct", this.props.userUpdateData,
+        axios.post("http://localhost:8080/api/user/updateProduct", this.props.productData,
             { headers: {"Authorization" : `Bearer ${this.props.userTokens}`} }).then(res => {
             if (res.status === 200) {
                 this.state.isUserRegistered(true);
             } else {
-
+                this.setState({errorMessage: "Incorrect Username & Password"})
             }
         })
     }
@@ -40,14 +41,14 @@ class ProductManage extends Component {
         this.setState({submitted: true})
         this.props.dispatch(ActionCreators.formSubmittionStatus(true))
         const {data} = this.state;
-        data.name = e.target.name.value;
-        data.email = e.target.email.value;
-        data.password = e.target.password.value;
-        data.age = e.target.age.value;
-        data.address = e.target.address.value;
+        data.productName = e.target.productName.value;
+        data.productDescription = e.target.productDescription.value;
+        data.productQuantity = e.target.productQuantity.value;
+        data.productPrice = e.target.productPrice.value;
+        data.productPromoId = e.target.productPromoId.value;
 
         if(this.state.isProductCreated === true) {
-            this.props.dispatch(ActionCreators.createProduct(data));
+            this.props.dispatch(ActionCreators.addProduct(data));
             this.sendProductCreateData();
         } else {
             this.props.dispatch(ActionCreators.updateProduct(data));
@@ -62,18 +63,17 @@ class ProductManage extends Component {
 
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <label>Name</label>
-                    <input type={"text"} name={"name"} placeholder={"Name"} />
-                    <label>Email</label>
-                    <input type={"text"} name={"email"}  placeholder={"Email"}/>
-                    <label>Password</label>
-                    <input type={"password"} name={"password"}
-                           placeholder={"Password"}/>
-                    <label>Age</label>
-                    <input type={"number"} name={"age"} placeholder={"Age"}/>
-                    <label>Address</label>
-                    <input type={"text"} name={"address"} placeholder={"Address"}/>
-                    <button> Register</button>
+                    <label>Product Name</label>
+                    <input type={"text"} name={"productName"} placeholder={"Product Name"} />
+                    <label>Product Description</label>
+                    <input type={"text"} name={"productDescription"}  placeholder={"Product Description"}/>
+                    <label>Product Quantity</label>
+                    <input type={"number"} name={"productQuantity"} placeholder={"Product Quantity"}/>
+                    <label>Product Price</label>
+                    <input type={"number"} name={"productPrice"} placeholder={"Product Price"}/>
+                    <label>Promotion</label>
+                    <input type={"text"} name={"productPromoId"} placeholder={"Address"}/>
+                    <button>Submit</button>
                 </form>
             </div>
         );

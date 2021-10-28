@@ -2,22 +2,33 @@ import React, {Component} from "react";
 import axios from "axios";
 import {Link, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
+import {ActionCreators} from "../actions/userAction";
 // import {ActionCreators} from "../../actions/userAction";
 
 class Dashboard extends Component {
 
     state = {
         isUserRegistered: false,
-        data: {},
-        submitted: false
+        searchData: {
+            search: ''
+        },
+        submitted: false,
+        products: [],
+        errorMessage: ""
     };
 
-    sendUserData = () => {
-        axios.post("http://localhost:8080/api/user/register", this.state.data).then(res => {
-            if (res.status === 200) {
-                this.state.isUserRegistered(true);
-            } else {
+    componentDidMount() {
+        this.getProductData();
+    }
 
+    getProductData = () => {
+        axios.get("http://localhost:8080/api/product",
+            { headers: {"Authorization" : `Bearer ${this.state.searchData}`} }).then(res => {
+            if (res.status === 200) {
+                this.setState({products: res.data.content});
+                this.props.dispatch(ActionCreators.getProducts(this.state.products));
+            } else {
+                this.setState({errorMessage: "Incorrect Username & Password"})
             }
         })
     }
@@ -25,18 +36,9 @@ class Dashboard extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.setState({submitted: true})
-        // this.props.dispatch(ActionCreators.formSubmittionStatus(true))
-        const {data} = this.state;
-        data.name = e.target.name.value;
-        data.email = e.target.email.value;
-        data.password = e.target.password.value;
-        data.age = e.target.age.value;
-        data.address = e.target.address.value;
+        const {searchData} = this.state;
+        searchData.search = e.target.search.value;
 
-        // this.props.dispatch(ActionCreators.addProfile(data));
-
-        // this.setState({data});
-        // console.log(this.props.getState())
         this.sendUserData();
     }
 

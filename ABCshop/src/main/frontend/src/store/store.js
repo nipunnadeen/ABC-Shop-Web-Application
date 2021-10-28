@@ -3,9 +3,11 @@ import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import userReducer from '../reducers/userReducer';
+import productReducer from "../reducers/productReducer";
 
 const allReducer = combineReducers({
-    user: userReducer
+    user: userReducer,
+    product: productReducer
 });
 
 const configureStore = () => {
