@@ -3,7 +3,7 @@ import axios from "axios";
 import {Link, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import {ActionCreators} from "../actions/userAction";
-// import {ActionCreators} from "../../actions/userAction";
+import ProductInventory from "./product/productInventory";
 
 class Dashboard extends Component {
 
@@ -33,43 +33,10 @@ class Dashboard extends Component {
         })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.setState({submitted: true})
-        const {searchData} = this.state;
-        searchData.search = e.target.search.value;
-
-        this.sendUserData();
-    }
-
-    handleEmailChange = (e) => {
-        // this.setState({email: e.target.value});
-    }
-
-    handlePasswordChange = (e) => {
-        // this.setState({email: e.target.value});
-    }
-
     render() {
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <label>Name</label>
-                    <input type={"text"} name={"name"} placeholder={"Name"} />
-                    <label>Email</label>
-                    <input type={"text"} name={"email"} onChange={this.handleEmailChange} placeholder={"Email"}/>
-                    <label>Password</label>
-                    <input type={"password"} name={"password"} onChange={this.handlePasswordChange}
-                           placeholder={"Password"}/>
-                    <label>Age</label>
-                    <input type={"number"} name={"age"} placeholder={"Age"}/>
-                    <label>Address</label>
-                    <input type={"text"} name={"address"} placeholder={"Address"}/>
-                    <button> Register</button>
-                </form>
-                <Link to="/login">
-                    Already have an account ? Sign in here
-                </Link>
+                <ProductInventory/>
             </div>
         );
     }

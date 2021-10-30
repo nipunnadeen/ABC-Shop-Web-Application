@@ -2,7 +2,9 @@ import { Types } from '../constants/actionTypes';
 
 export const ActionCreators = {
 
-    getProducts: (product) => ({ type: Types.GET_PRODUCT, payload: { product } }),
+    getProducts: (products) => ({ type: Types.GET_PRODUCT, payload: { products } }),
+
+    getSingleProduct: (singleProduct) => ({ type: Types.GET_PRODUCT, payload: { singleProduct } }),
 
     addProduct: (product) => ({ type: Types.ADD_PRODUCT, payload: { product } }),
 

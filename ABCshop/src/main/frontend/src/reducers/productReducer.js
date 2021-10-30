@@ -9,7 +9,7 @@ const initialState = {
         productPromoId: 0
     },
     product: [],
-    products: [],
+    allProducts: [],
     formSubmitted: false
 }
 
@@ -18,13 +18,13 @@ const productReducer = (state = initialState, action) => {
         case Types.GET_PRODUCT:
             return {
                 ...state,
-                product: action.payload.product,
+                product: action.payload.singleProduct,
                 formSubmitted: false // after update user formsubmition reset
             }
         case Types.GET_PRODUCTS:
             return {
                 ...state,
-                products: action.payload.product,
+                allProducts: action.payload.products,
                 formSubmitted: false // after update user formsubmition reset
             }
         case Types.ADD_PRODUCT:
