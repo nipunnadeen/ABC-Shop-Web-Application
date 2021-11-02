@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    ResponseEntity<List<Product>> getAllProducts(Optional<Integer> page,
+    ResponseEntity<List<Product>> getAllProducts(Optional<Integer> page, Optional<Integer> number,
                                                  Optional<String> sortBy);
 
     ResponseEntity<Product> createProduct(Product product);

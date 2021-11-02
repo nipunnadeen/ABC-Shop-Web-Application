@@ -18,8 +18,9 @@ public class ProductController {
 
     @GetMapping("/product")
     public ResponseEntity<List<Product>> getAllProducts(@RequestParam Optional<Integer> page,
+                                                        @RequestParam Optional<Integer> number,
                                                         @RequestParam Optional<String> sortBy) {
-        return productService.getAllProducts(page, sortBy);
+        return productService.getAllProducts(page, number, sortBy);
     }
 
 //    @GetMapping("/product")

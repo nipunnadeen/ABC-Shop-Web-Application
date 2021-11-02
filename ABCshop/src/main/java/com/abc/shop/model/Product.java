@@ -62,19 +62,6 @@ public class Product {
     public Product() {
     }
 
-//    public Product(String productName, String productDescription, int productQuantity,
-//                   double productPrice, User createdBy, User updatedBy, long deletedBy, long promotionId) {
-//        this.productName = productName;
-//        this.productDescription = productDescription;
-//        this.productQuantity = productQuantity;
-//        this.productPrice = productPrice;
-//        this.createdBy = createdBy;
-//        this.updatedBy = updatedBy;
-//        this.deletedBy = deletedBy;
-//        this.promotionId = promotionId;
-//    }
-
-
     public Product(String productName, String productDescription, int productQuantity,
                    double productPrice, User createdBy, User updatedBy, long deletedBy,
                    Promotion promotionId) {

@@ -1,5 +1,7 @@
 package com.abc.shop.service;
 
+import com.abc.shop.exception.InvalidInputException;
+import com.abc.shop.exception.NoSuchElementFoundException;
 import com.abc.shop.model.Product;
 import com.abc.shop.model.Promotion;
 import com.abc.shop.model.User;
@@ -25,17 +27,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<List<Product>> getAllProducts(Optional<Integer> page,
+                                                        Optional<Integer> number,
                                                         Optional<String> sortBy) {
         ResponseEntity<List<Product>> response;
         Page<Product> productsData;
         try {
             productsData = productRepository.findAll(
                     PageRequest.of(
-                           page.orElse(0), 1, Sort.Direction.ASC, sortBy.orElse("id")
+                            page.orElse(0), number.orElse(10), Sort.Direction.ASC,
+                            sortBy.orElse("id")
                     )
             );
-//            for(int i=0; i<productsData.size(); i++){
-//                Product specificProduct  = productsData.get(i);
+//            for(int i=0; i<productsData.getSize(); i++){
+//                Product specificProduct  = productsData.get([i]);
 //                if(specificProduct.getDeletedAt() != null){
 //                    productsData.remove(specificProduct);
 //                }
@@ -81,25 +85,45 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+    /**
+     * Returns the single product details according to given product id
+     *
+     * @param productId - Id of the product
+     * @return - Single product data
+     */
     @Override
     public ResponseEntity<Product> getProduct(Long productId) {
-        ResponseEntity<Product> response;
-        try {
-            if (productId != null && productId > 0) {
-                Product productData = productRepository.findProductById(productId);
-                if (productData != null) {
-                    response = new ResponseEntity<>(productData, HttpStatus.OK);
-                } else {
-                    response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
+        if (productId != null && productId > 0) {
+            Product productData = productRepository.findProductById(productId);
+            if (productData != null) {
+                return new ResponseEntity<>(productData, HttpStatus.OK);
             } else {
-                response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                throw new NoSuchElementFoundException("Product Id is not valid");
             }
-        } catch (Exception e) {
-            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            throw new InvalidInputException("Product Id is not acceptable");
         }
-        return response;
     }
+
+//    @Override
+//    public ResponseEntity<Product> getProduct(Long productId) {
+//        ResponseEntity<Product> response;
+//        try {
+//            if (productId != null && productId > 0) {
+//                Product productData = productRepository.findProductById(productId);
+//                if (productData != null) {
+//                    response = new ResponseEntity<>(productData, HttpStatus.OK);
+//                } else {
+//                    response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//                }
+//            } else {
+//                response = new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+//            }
+//        } catch (Exception e) {
+//            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        return response;
+//    }
 
     @Override
     public ResponseEntity<Product> updateProduct(Product product, Long productId) {
@@ -143,22 +167,16 @@ public class ProductServiceImpl implements ProductService {
 
         ResponseEntity response;
         Product productsData;
-        long userId = CommonUtill.userId;
         try {
             if (productId != null && productId > 0) {
-                if (userId != 0) {
-                    productsData = productRepository.findProductById(productId);
-                    if (productsData != null) {
-                        productsData.setDeletedAt(new Date());
-                        productRepository.save(productsData);
-                        response = new ResponseEntity<>(HttpStatus.OK);
-                    } else {
-                        response = new ResponseEntity<>(("Product not exist with id :" + productId),
-                                HttpStatus.NOT_FOUND);
-                    }
+                productsData = productRepository.findProductById(productId);
+                if (productsData != null) {
+                    productsData.setDeletedAt(new Date());
+                    productRepository.save(productsData);
+                    response = new ResponseEntity<>(HttpStatus.OK);
                 } else {
-                    response = new ResponseEntity<>(("User Id is not acceptable"),
-                            HttpStatus.NOT_ACCEPTABLE);
+                    response = new ResponseEntity<>(("Product not exist with id :" + productId),
+                            HttpStatus.NOT_FOUND);
                 }
             } else {
                 response = new ResponseEntity<>(("Product Id is not acceptable"),
