@@ -8,6 +8,7 @@ import com.abc.shop.model.User;
 import com.abc.shop.repository.ProductRepository;
 import com.abc.shop.utill.CommonUtill;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -93,16 +94,27 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ResponseEntity<Product> getProduct(Long productId) {
-        if (productId != null && productId > 0) {
-            Product productData = productRepository.findProductById(productId);
-            if (productData != null) {
-                return new ResponseEntity<>(productData, HttpStatus.OK);
-            } else {
-                throw new NoSuchElementFoundException("Product Id is not valid");
-            }
-        } else {
+
+        if (productId == null || productId < 0) {
             throw new InvalidInputException("Product Id is not acceptable");
         }
+        Product productData = productRepository.findProductById(productId);
+        if (productData == null) {
+            throw new NoSuchElementFoundException("Product with ID " +
+                    productId + " does not exist.");
+        }
+        return new ResponseEntity<>(productData, HttpStatus.OK);
+
+//        if (productId != null && productId > 0) {
+//            Product productData = productRepository.findProductById(productId);
+//            if (productData != null) {
+//                return new ResponseEntity<>(productData, HttpStatus.OK);
+//            } else {
+//                throw new NoSuchElementFoundException("Product Id is not valid");
+//            }
+//        } else {
+//            throw new InvalidInputException("Product Id is not acceptable");
+//        }
     }
 
 //    @Override

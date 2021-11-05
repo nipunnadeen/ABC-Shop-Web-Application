@@ -1,6 +1,5 @@
 package com.abc.shop.filter;
 
-import com.abc.shop.model.User;
 import com.abc.shop.utill.CommonUtill;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
