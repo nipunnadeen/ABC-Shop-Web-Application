@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
 
+// Can use @Data anotation to automatically create getters and setters. For that need to add lombok dependency
 @Entity
 @Table(name = "products")
 @EntityListeners(AuditingEntityListener.class)

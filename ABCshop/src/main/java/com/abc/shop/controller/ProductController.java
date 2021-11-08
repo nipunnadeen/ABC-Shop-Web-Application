@@ -3,6 +3,7 @@ package com.abc.shop.controller;
 import com.abc.shop.model.Product;
 import com.abc.shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +18,19 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getAllProducts(@RequestParam Optional<Integer> page,
-                                                        @RequestParam Optional<Integer> number,
-                                                        @RequestParam Optional<String> sortBy) {
-        return productService.getAllProducts(page, number, sortBy);
+    public ResponseEntity<List<Product>> getAllProducts(
+            @RequestParam(defaultValue="0", name = "page") Integer pageSize ,
+            @RequestParam(defaultValue="5", name = "number") Integer numberOfItems,
+            @RequestParam(defaultValue="id", name = "field") String sortBy) {
+        return productService.getAllProducts(pageSize, numberOfItems, sortBy);
     }
+
+//    @GetMapping("/product")
+//    public ResponseEntity<List<Product>> getAllProducts(@RequestParam Optional<Integer> page,
+//                                                        @RequestParam Optional<Integer> number,
+//                                                        @RequestParam Optional<String> sortBy) {
+//        return productService.getAllProducts(page, number, sortBy);
+//    }
 
 //    @GetMapping("/product")
 //    public ResponseEntity<List<Product>> getAllProducts() {
