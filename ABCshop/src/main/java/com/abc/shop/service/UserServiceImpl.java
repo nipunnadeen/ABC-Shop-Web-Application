@@ -2,14 +2,23 @@ package com.abc.shop.service;
 
 //import com.abc.shop.FileStore.FileStore;
 import com.abc.shop.bucket.BucketName;
+import com.abc.shop.exception.InvalidInputException;
+import com.abc.shop.exception.NoSuchElementFoundException;
 import com.abc.shop.model.User;
 import com.abc.shop.repository.UserRepository;
 import com.abc.shop.utill.CommonUtill;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,12 +26,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.IMAGE_GIF;
 import static org.springframework.http.MediaType.IMAGE_JPEG;
 import static org.springframework.http.MediaType.IMAGE_PNG;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -215,5 +229,53 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
+    }
+
+    @Override
+    public void verifyRefreshToken(HttpServletRequest request, HttpServletResponse response,
+                                   Long userId) throws IOException {
+        if (userId == null || userId < 0) {
+            throw new InvalidInputException("User Id is not acceptable");
+        }
+
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                String refreshToken = authorizationHeader.substring("Bearer ".length());
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(refreshToken);
+
+                User user = userRepository.findUserById(decodedJWT.getClaim("id").asLong());
+                if (user != null) {
+                    throw new NoSuchElementFoundException("User is not found");
+                }
+                String username = decodedJWT.getSubject();
+                CommonUtill.userId = decodedJWT.getClaim("id").asLong();
+
+                String access_token = JWT.create()
+                        .withSubject(username)
+                        .withClaim("id", CommonUtill.userId)
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 100 * 60 * 1000))
+                        .withIssuer(request.getRequestURL().toString())
+                        .sign(algorithm);
+
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("access_token", access_token);
+                tokens.put("refresh_token", refreshToken);
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
+            } catch (Exception exception) {
+                response.setHeader("error", exception.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                Map<String, String> error = new HashMap<>();
+                error.put("error_message", exception.getMessage());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing!");
+        }
     }
 }

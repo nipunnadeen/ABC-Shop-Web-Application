@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -17,8 +20,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-
-    private Long userId = CommonUtill.userId;
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -39,12 +40,12 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<User> getUserDetail() {
-        return userService.getUser(userId);
+        return userService.getUser(CommonUtill.userId);
     }
 
     @PutMapping("/user/update")
     public ResponseEntity<User> updateUser(@RequestBody User userDetails) {
-        return userService.updateUser(userDetails, userId);
+        return userService.updateUser(userDetails, CommonUtill.userId);
     }
 
 //    @PostMapping(
@@ -58,6 +59,12 @@ public class UserController {
 
     @DeleteMapping("/user/remove")
     public ResponseEntity removeUser() {
-        return userService.deleteUser(userId);
+        return userService.deleteUser(CommonUtill.userId);
+    }
+
+    @GetMapping("/token/refreshToken")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        userService.verifyRefreshToken(request, response, CommonUtill.userId);
     }
 }
